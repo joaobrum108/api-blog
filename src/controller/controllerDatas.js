@@ -72,8 +72,9 @@ async sendUploads(req, res) {
 
   async  dataPutUploads(req, res) {
   const { id } = req.params;
-  const { titulo, descricao, categoria, imagem } = req.body;
-
+  const { titulo, descricao, categoria } = req.body;
+  const  imagem = req.file ? req.file.filename : null;
+  
   try {
     const result = await serviceDatas.serviceDataUpdate(id, titulo, descricao, categoria, imagem);
     res.json({ success: true, result });
