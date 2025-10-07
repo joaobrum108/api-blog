@@ -2,10 +2,17 @@ const serviceDatas = require("../services/serviceDatas");
 
 class ControllerData {
   
-  async sendUploads(req, res) {
+async sendUploads(req, res) {
   try {
     const { titulo, descricao, categoria } = req.body;
     const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({
+        statusCode: "NENHUMA_IMAGEM_ENVIADA",
+        error: "Envie uma imagem válida.",
+      });
+    }
 
     const result = await serviceDatas.ServiceSendUploads(
       titulo,
@@ -15,17 +22,19 @@ class ControllerData {
     );
 
     return res.status(200).json({
-      statusCode: "SUCESSO_ENVIO",
-      result,
+      statusCode: "IMAGEM_SALVA",
+      message: result.message,
+      data: result,
     });
-  } catch (e) {
-    console.error("Erro no envio:", e);
-    return res.status(500).json({
+  } catch (error) {
+    console.error("Erro no controller:", error);
+    return res.status(error.statusCode || 500).json({
       statusCode: "ERRO_ENVIO",
-      error: e.message,
+      error: error.message || "Erro ao enviar dados.",
     });
   }
 }
+
 
   async dataUploads(Req , res){
     try {

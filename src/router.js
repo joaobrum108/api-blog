@@ -19,4 +19,5 @@ router.put('/dataPutUploads/:id', ControllerData.dataPutUploads);
 router.delete('/dataDeleteUploads/:id', ControllerData.dataDeleteUploads);
 
 
+
 module.exports = router;
