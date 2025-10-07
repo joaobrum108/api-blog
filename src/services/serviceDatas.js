@@ -1,63 +1,79 @@
-/** @format */
-
 const { mysqlCon_LOCAL } = require("../database/conexao");
 
+
 class serviceDatas {
-  async enviarDados(titulo, descricao) {
-    try {
-      const queryCheck = "SELECT * FROM posts WHERE id = ?";
-      const query = "INSERT INTO posts (titulo, descricao) VALUES (?, ?)";
-      const [result] = await mysqlCon_LOCAL.execute( queryCheck,query, [titulo, descricao]);
-      return { id: result.insertId, titulo, descricao };
-    } catch (error) {
-      console.error("Erro ao enviar dados:", error);
-      return { statusCode: "ERROR_AO_ENVIAR_DADOS" };
-    }
-  }
+  
+  async ServiceSendUploads(titulo, descricao, categoria, file) {
+  try {
+    const sql = "INSERT INTO posts (titulo, descricao, categoria, imagem) VALUES (?, ?, ?, ?)";
+    const [result] = await mysqlCon_LOCAL.execute(sql, [
+      titulo,
+      descricao,
+      categoria,
+      file.filename,
+    ]);
 
-  async obterDados() {
-    try {
-      const query = "SELECT * FROM posts";
-      const [rows] = await mysqlCon_LOCAL.execute(query);
-      return rows;
-    } catch (error) {
-      console.error("Erro ao obter dados:", error);
-      return { statusCode: "ERROR_AO_OBTER_DADOS" };
-    }
-  }
-
-  async atualizarDados(id, titulo, descricao) {
-    try {
-      const queryCheck = "SELECT * FROM posts WHERE id = ?";
-      const [rows] = await mysqlCon_LOCAL.execute(queryCheck, [id]);
-      if (rows.length === 0) {
-        return { statusCode: "DADOS_NAO_ENCONTRADOS" };
-      }
-      const queryUpdate =
-        "UPDATE posts SET titulo = ?, descricao = ? WHERE id = ?";
-      await mysqlCon_LOCAL.execute(queryUpdate, [titulo, descricao, id]);
-      return { id, titulo, descricao };
-    } catch (error) {
-      console.error("Erro ao atualizar dados:", error);
-      return { statusCode: "ERROR_AO_ATUALIZAR_DADOS" };
-    }
-  }
-
-    async deletarDados(id) {
-    try {
-        const queryCheck = "SELECT * FROM posts WHERE id = ?";
-        const [rows] = await mysqlCon_LOCAL.execute(queryCheck, [id]);
-        if (rows.length === 0) {
-            return { statusCode: "DADOS_NAO_ENCONTRADOS" };
-        }
-        const queryDelet = "DELETE FROM posts WHERE id = ?";
-        await mysqlCon_LOCAL.execute(queryDelet, [id]);
-        return { statusCode: "DADOS_DELETADOS_COM_SUCESSO" };
-    } catch (error) {
-        console.error("Erro ao deletar dados:", error);
-        return { statusCode: "ERROR_AO_DELETAR_DADOS" };
-    }
+    return {
+      message: "Dados enviados com sucesso!",
+      titulo,
+      descricao,
+      categoria,
+      imagem: file ? file.filename : null,
+    };
+  } catch (error) {
+    console.error("Erro no service:", error);
+    throw new Error("Falha ao enviar dados");
   }
 }
 
+async serviceDataUploads() {
+  try {
+    const sql = "SELECT * FROM posts";
+    const [result] = await mysqlCon_LOCAL.execute(sql);
+    return result;
+  } catch (error) {
+    console.error("Erro no service:", error);
+    throw new Error("Falha ao buscar dados");
+  }
+
+}
+
+async serviceDataUploadsById(id) {
+  try {
+    const sql = "SELECT * FROM posts WHERE id = ?";
+    const [result] = await mysqlCon_LOCAL.execute(sql, [id]);
+    return result;
+  } catch (error) {
+    console.error("Erro no service:", error);
+    throw new Error("Falha ao buscar dados");
+  }
+}
+
+async serviceDataUpdate(id, titulo, descricao, categoria, imagem) {
+  try {
+    const sql = "UPDATE posts SET titulo = ?, descricao = ?, categoria = ?, imagem = ? WHERE id = ?";
+    const [result] = await mysqlCon_LOCAL.execute(sql, [titulo, descricao, categoria, imagem, id]);
+    return result;
+  } catch (e) {
+    console.error("Erro no service:", e);
+    throw new Error("Falha ao atualizar dados");
+  }
+}
+
+
+async serviceDataDelete(id){
+  try {
+    const sql = "DELETE FROM posts WHERE id = ?";
+    const [result] = await mysqlCon_LOCAL.execute(sql, [id]);
+    return result;
+  } catch (e) {
+    const statusErro = "ERRO_AO_DELETAR";
+    return res.status(500).json({
+      statusErro,
+      error: e.message,
+    });
+  }
+}
+
+}
 module.exports = new serviceDatas();

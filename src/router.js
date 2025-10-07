@@ -1,11 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const ControllerData = require('./controller/controllerDatas');
+const upload = require('./middleware/multer');
 
-// adm
-router.post('/enviarDados', ControllerData.enviarDados)
-router.get('/obterDados' ,ControllerData.obterDados) 
-router.put('/atualizarDados', ControllerData.atualizarDados)
-router.delete('/deletarDados', ControllerData.deletarDados)
+
+router.post('/sendUploads', upload.single('imagem'), ControllerData.sendUploads);
+
+
+router.get('/dataUploads', ControllerData.dataUploads);
+
+
+router.get('/dataUploads/:id', ControllerData.dataUploadsById);
+
+
+router.put('/dataPutUploads/:id', ControllerData.dataPutUploads);
+
+
+router.delete('/dataDeleteUploads/:id', ControllerData.dataDeleteUploads);
+
 
 module.exports = router;
