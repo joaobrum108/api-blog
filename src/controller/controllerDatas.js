@@ -1,8 +1,8 @@
 const serviceDatas = require("../services/serviceDatas");
 const STATUS = require("../utils/statusCodes");
 
-class ControllerData {
-  async sendUploads(req, res) {
+class controllerDados {
+  async enviarDados(req, res) {
     try {
       const { titulo, descricao, categoria } = req.body;
       const file = req.file;
@@ -30,7 +30,7 @@ class ControllerData {
     }
   }
 
-  async dataUploads(req, res) {
+  async listarDados(req, res) {
     try {
       const result = await serviceDatas.serviceDataUploads();
       return res.status(200).json({
@@ -46,7 +46,7 @@ class ControllerData {
     }
   }
 
-  async dataUploadsById(req, res) {
+  async buscarDadosPorID(req, res) {
     try {
       const { id } = req.params;
       const result = await serviceDatas.serviceDataUploadsById(id);
@@ -64,7 +64,7 @@ class ControllerData {
     }
   }
 
-  async dataPutUploads(req, res) {
+  async atualizarDadosPorID(req, res) {
     try {
       const { id } = req.params;
       const { titulo, descricao, categoria } = req.body;
@@ -86,7 +86,7 @@ class ControllerData {
     }
   }
 
-  async dataDeleteUploads(req, res) {
+  async deletarDadosPorID(req, res) {
     try {
       const { id } = req.params;
       const result = await serviceDatas.serviceDataDelete(id);
@@ -106,4 +106,4 @@ class ControllerData {
   }
 }
 
-module.exports = new ControllerData();
+module.exports = new controllerDados();

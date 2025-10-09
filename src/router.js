@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ControllerData = require('./controller/controllerDatas');
+const controllerDados = require('./controller/controllerDatas');
 const upload = require('./middleware/multer');
 
 /**
@@ -59,7 +59,7 @@ const upload = require('./middleware/multer');
  *               error: Falha ao enviar dados.
  */
 
-router.post('/sendUploads', upload.single('imagem'), ControllerData.sendUploads);
+router.post('/enviarDados', upload.single('imagem'), controllerDados.enviarDados);
 
 /**
  * @openapi
@@ -91,7 +91,7 @@ router.post('/sendUploads', upload.single('imagem'), ControllerData.sendUploads)
  *               error: Falha ao buscar dados.
  */
 
-router.get('/dataUploads', upload.single('imagem'), ControllerData.dataUploads);
+router.get('/listarDado', upload.single('imagem'), controllerDados.listarDados);
 
 /**
  * @openapi
@@ -137,7 +137,7 @@ router.get('/dataUploads', upload.single('imagem'), ControllerData.dataUploads);
  *               error: Falha ao buscar dados por ID.
  */
 
-router.get('/dataUploads/:id', ControllerData.dataUploadsById);
+router.get('/buscarDados/:id', controllerDados.buscarDadosPorID);
 
 /**
  * @openapi
@@ -198,7 +198,7 @@ router.get('/dataUploads/:id', ControllerData.dataUploadsById);
  *               error: Falha ao atualizar dados.
  */
 
-router.put('/dataPutUploads/:id', upload.single('imagem'), ControllerData.dataPutUploads);
+router.put('/atualizarDados/:id', upload.single('imagem'), controllerDados.atualizarDadosPorID);
 
 /**
  * @openapi
@@ -240,6 +240,6 @@ router.put('/dataPutUploads/:id', upload.single('imagem'), ControllerData.dataPu
  *               error: Falha ao deletar registro.
  */
 
-router.delete('/dataDeleteUploads/:id', ControllerData.dataDeleteUploads);
+router.delete('/deletarDados/:id', controllerDados.deletarDadosPorID);
 
 module.exports = router;

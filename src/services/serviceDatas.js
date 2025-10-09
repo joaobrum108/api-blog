@@ -6,7 +6,7 @@ const STATUS = require("../utils/statusCodes");
 class serviceDatas {
   async ServiceSendUploads(titulo, descricao, categoria, file) {
     try {
-      const sql = "INSERT INTO posts (titulo, descricao, categoria, imagem) VALUES (?, ?, ?, ?)";
+      const sql = "INSERT INTO posts (titulo, descricao, categoria, imagem , dataPublicacao) VALUES (?, ?, ?, ? , NOW())";
       const [result] = await mysqlCon_LOCAL.execute(sql, [
         titulo,
         descricao,
