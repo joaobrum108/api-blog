@@ -14,7 +14,7 @@ class controllerDados {
         });
       }
 
-      const result = await serviceDatas.ServiceSendUploads(titulo, descricao, categoria, file);
+      const result = await serviceDatas.serviceEnviarDados(titulo, descricao, categoria, file);
 
       return res.status(200).json({
         statusCode: "IMAGEM_SALVA",
@@ -32,7 +32,7 @@ class controllerDados {
 
   async listarDados(req, res) {
     try {
-      const result = await serviceDatas.serviceDataUploads();
+      const result = await serviceDatas.serviceListarDados();
       return res.status(200).json({
         statusCode: "SUCESSO",
         data: result,
@@ -49,7 +49,7 @@ class controllerDados {
   async buscarDadosPorID(req, res) {
     try {
       const { id } = req.params;
-      const result = await serviceDatas.serviceDataUploadsById(id);
+      const result = await serviceDatas.serviceListarDadosPorID(id);
       return res.status(200).json({
         statusCode: "SUCESSO",
         data: result,
@@ -70,7 +70,7 @@ class controllerDados {
       const { titulo, descricao, categoria } = req.body;
       const novaImagem = req.file ? req.file.filename : null;
 
-      const result = await serviceDatas.serviceDataUpdate(id, titulo, descricao, categoria, novaImagem);
+      const result = await serviceDatas.serviceAtualizarDados(id, titulo, descricao, categoria, novaImagem);
 
       return res.status(200).json({
         statusCode: "SUCESSO_ATUALIZADO",
@@ -89,7 +89,7 @@ class controllerDados {
   async deletarDadosPorID(req, res) {
     try {
       const { id } = req.params;
-      const result = await serviceDatas.serviceDataDelete(id);
+      const result = await serviceDatas.serviceDeletarDadosPorID(id);
       return res.status(200).json({
         statusCode: "SUCESSO_DELETADO",
         data: result,

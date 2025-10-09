@@ -4,7 +4,7 @@ const path = require("path");
 const STATUS = require("../utils/statusCodes");
 
 class serviceDatas {
-  async ServiceSendUploads(titulo, descricao, categoria, file) {
+  async serviceEnviarDados(titulo, descricao, categoria, file) {
     try {
       const sql = "INSERT INTO posts (titulo, descricao, categoria, imagem , dataPublicacao) VALUES (?, ?, ?, ? , NOW())";
       const [result] = await mysqlCon_LOCAL.execute(sql, [
@@ -25,7 +25,7 @@ class serviceDatas {
     }
   }
 
-  async serviceDataUploads() {
+  async serviceListarDados() {
     try {
       const sql = "SELECT * FROM posts";
       const [result] = await mysqlCon_LOCAL.execute(sql);
@@ -35,7 +35,7 @@ class serviceDatas {
     }
   }
 
-  async serviceDataUploadsById(id) {
+  async serviceListarDadosPorID(id) {
     try {
       const sql = "SELECT * FROM posts WHERE id = ?";
       const [result] = await mysqlCon_LOCAL.execute(sql, [id]);
@@ -45,7 +45,7 @@ class serviceDatas {
     }
   }
 
-  async serviceDataUpdate(id, titulo, descricao, categoria, novaImagem) {
+  async serviceAtualizarDados(id, titulo, descricao, categoria, novaImagem) {
     try {
       const [rows] = await mysqlCon_LOCAL.execute("SELECT imagem FROM posts WHERE id = ?", [id]); 
     
@@ -89,7 +89,7 @@ class serviceDatas {
     }
   }
 
-  async serviceDataDelete(id) {
+  async serviceDeletarDadosPorID(id) {
     try {
       const [rows] = await mysqlCon_LOCAL.execute("SELECT imagem FROM posts WHERE id = ?", [id]);
       if (rows.length === 0) {

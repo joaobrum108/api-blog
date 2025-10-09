@@ -5,7 +5,7 @@ const upload = require('./middleware/multer');
 
 /**
  * @openapi
- * /sendUploads:
+ * /enviarDados:
  *   post:
  *     summary: Envia um novo post com imagem
  *     description: Cria um novo post no banco de dados, incluindo título, descrição, categoria e imagem.
@@ -63,7 +63,7 @@ router.post('/enviarDados', upload.single('imagem'), controllerDados.enviarDados
 
 /**
  * @openapi
- * /dataUploads:
+ * /listarDados:
  *   get:
  *     summary: Lista todos os posts
  *     description: Retorna todos os posts armazenados no banco de dados.
@@ -91,11 +91,11 @@ router.post('/enviarDados', upload.single('imagem'), controllerDados.enviarDados
  *               error: Falha ao buscar dados.
  */
 
-router.get('/listarDado', upload.single('imagem'), controllerDados.listarDados);
+router.get('/listarDados', upload.single('imagem'), controllerDados.listarDados);
 
 /**
  * @openapi
- * /dataUploads/{id}:
+ * /buscarDados/{id}:
  *   get:
  *     summary: Busca um post específico
  *     description: Retorna os dados de um post com base no ID informado.
@@ -141,7 +141,7 @@ router.get('/buscarDados/:id', controllerDados.buscarDadosPorID);
 
 /**
  * @openapi
- * /dataPutUploads/{id}:
+ * /atualizarDados/{id}:
  *   put:
  *     summary: Atualiza um post existente
  *     description: Atualiza os dados de um post específico, podendo alterar imagem, título, descrição e categoria.
@@ -202,7 +202,7 @@ router.put('/atualizarDados/:id', upload.single('imagem'), controllerDados.atual
 
 /**
  * @openapi
- * /dataDeleteUploads/{id}:
+ * /deletarDados/{id}:
  *   delete:
  *     summary: Deleta um post
  *     description: Remove um post do banco de dados com base no ID informado.
