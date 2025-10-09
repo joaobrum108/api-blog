@@ -1,4 +1,5 @@
 const serviceDatas = require("../services/serviceDatas");
+const STATUS = require("../utils/statusCodes");
 
 class ControllerData {
   async sendUploads(req, res) {
@@ -21,9 +22,10 @@ class ControllerData {
         data: result,
       });
     } catch (error) {
+      const [statusCode, message] = error.message.split(":");
       return res.status(500).json({
-        statusCode: "ERRO_ENVIO",
-        error: error.message,
+        statusCode: statusCode || STATUS.ERRO_INSERIR_DADOS,
+        error: message?.trim() || "Erro interno ao enviar dados.",
       });
     }
   }
@@ -36,9 +38,10 @@ class ControllerData {
         data: result,
       });
     } catch (error) {
+      const [statusCode, message] = error.message.split(":");
       return res.status(500).json({
-        statusCode: "ERRO_ENVIO",
-        error: error.message,
+        statusCode: statusCode || STATUS.ERRO_BUSCA_DADOS,
+        error: message?.trim() || "Erro interno ao buscar dados.",
       });
     }
   }
@@ -52,9 +55,11 @@ class ControllerData {
         data: result,
       });
     } catch (error) {
-      return res.status(500).json({
-        statusCode: "ERRO_ENVIO",
-        error: error.message,
+      const [statusCode, message] = error.message.split(":");
+      const httpCode = statusCode === STATUS.POST_NAO_ENCONTRADO ? 404 : 500;
+      return res.status(httpCode).json({
+        statusCode: statusCode || STATUS.ERRO_BUSCA_POR_ID,
+        error: message?.trim() || "Erro ao buscar dados por ID.",
       });
     }
   }
@@ -72,9 +77,11 @@ class ControllerData {
         data: result,
       });
     } catch (error) {
-      return res.status(500).json({
-        statusCode: "ERRO_ATUALIZACAO",
-        error: error.message,
+      const [statusCode, message] = error.message.split(":");
+      const httpCode = statusCode === STATUS.POST_NAO_ENCONTRADO ? 404 : 500;
+      return res.status(httpCode).json({
+        statusCode: statusCode || STATUS.ERRO_ATUALIZACAO,
+        error: message?.trim() || "Erro ao atualizar dados.",
       });
     }
   }
@@ -88,9 +95,12 @@ class ControllerData {
         data: result,
       });
     } catch (error) {
-      return res.status(500).json({
-        statusCode: "ERRO_AO_DELETAR",
-        error: error.message,
+      const statusCode = error.statusCode || STATUS.ERRO_DELETAR_REGISTRO;
+      const message = error.error || "Erro ao deletar registro.";
+      const httpCode = statusCode === STATUS.POST_NAO_ENCONTRADO ? 404 : 500;
+      return res.status(httpCode).json({
+        statusCode,
+        error: message,
       });
     }
   }
