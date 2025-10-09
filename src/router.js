@@ -7,17 +7,16 @@ const upload = require('./middleware/multer');
 router.post('/sendUploads', upload.single('imagem'), ControllerData.sendUploads);
 
 
-router.get('/dataUploads', ControllerData.dataUploads);
+router.get('/dataUploads', upload.single('imagem'), ControllerData.dataUploads);
 
 
-router.get('/dataUploads/:id', ControllerData.dataUploadsById);
+router.get('/dataUploads/:id', ControllerData.dataUploadsById);1
 
 
 router.put('/dataPutUploads/:id', upload.single('imagem'), ControllerData.dataPutUploads);
 
 
 router.delete('/dataDeleteUploads/:id', ControllerData.dataDeleteUploads);
-
 
 
 module.exports = router;

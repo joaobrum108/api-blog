@@ -1,105 +1,99 @@
 const serviceDatas = require("../services/serviceDatas");
 
 class ControllerData {
-  
-async sendUploads(req, res) {
-  try {
-    const { titulo, descricao, categoria } = req.body;
-    const file = req.file;
+  async sendUploads(req, res) {
+    try {
+      const { titulo, descricao, categoria } = req.body;
+      const file = req.file;
 
-    if (!file) {
-      return res.status(400).json({
-        statusCode: "NENHUMA_IMAGEM_ENVIADA",
-        error: "Envie uma imagem válida.",
+      if (!file) {
+        return res.status(400).json({
+          statusCode: "NENHUMA_IMAGEM_ENVIADA",
+          error: "Envie uma imagem válida.",
+        });
+      }
+
+      const result = await serviceDatas.ServiceSendUploads(titulo, descricao, categoria, file);
+
+      return res.status(200).json({
+        statusCode: "IMAGEM_SALVA",
+        message: result.message,
+        data: result,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        statusCode: "ERRO_ENVIO",
+        error: error.message,
       });
     }
-
-    const result = await serviceDatas.ServiceSendUploads(
-      titulo,
-      descricao,
-      categoria,
-      file
-    );
-
-    return res.status(200).json({
-      statusCode: "IMAGEM_SALVA",
-      message: result.message,
-      data: result,
-    });
-  } catch (error) {
-    console.error("Erro no controller:", error);
-    return res.status(error.statusCode || 500).json({
-      statusCode: "ERRO_ENVIO",
-      error: error.message || "Erro ao enviar dados.",
-    });
   }
-}
 
-
-  async dataUploads(Req , res){
+  async dataUploads(req, res) {
     try {
       const result = await serviceDatas.serviceDataUploads();
       return res.status(200).json({
-        statusCode: "SUCESSO_ENVIO",
-        result,
+        statusCode: "SUCESSO",
+        data: result,
       });
-    } catch (e) {
-      const statusCode = "ERRO_ENVIO";
+    } catch (error) {
       return res.status(500).json({
-        statusCode,
-        error: e.message,
+        statusCode: "ERRO_ENVIO",
+        error: error.message,
       });
     }
   }
 
-
-  async dataUploadsById(Req , res){
+  async dataUploadsById(req, res) {
     try {
-      const result = await serviceDatas.serviceDataUploadsById();
+      const { id } = req.params;
+      const result = await serviceDatas.serviceDataUploadsById(id);
       return res.status(200).json({
-        statusCode: "SUCESSO_ENVIO",
-        result,
+        statusCode: "SUCESSO",
+        data: result,
       });
-    } catch (e) {
-      const statusCode = "ERRO_ENVIO";
+    } catch (error) {
       return res.status(500).json({
-        statusCode,
-        error: e.message,
+        statusCode: "ERRO_ENVIO",
+        error: error.message,
       });
     }
   }
 
+  async dataPutUploads(req, res) {
+    try {
+      const { id } = req.params;
+      const { titulo, descricao, categoria } = req.body;
+      const novaImagem = req.file ? req.file.filename : null;
 
-  async  dataPutUploads(req, res) {
-  const { id } = req.params;
-  const { titulo, descricao, categoria } = req.body;
-  const  imagem = req.file ? req.file.filename : null;
-  
-  try {
-    const result = await serviceDatas.serviceDataUpdate(id, titulo, descricao, categoria, imagem);
-    res.json({ success: true, result });
-  } catch (error) {
-    console.error("Erro no controller:", error);
-    res.status(500).json({ error: "Erro ao atualizar dados" });
+      const result = await serviceDatas.serviceDataUpdate(id, titulo, descricao, categoria, novaImagem);
+
+      return res.status(200).json({
+        statusCode: "SUCESSO_ATUALIZADO",
+        data: result,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        statusCode: "ERRO_ATUALIZACAO",
+        error: error.message,
+      });
+    }
   }
-}
 
-  async dataDeleteUploads(req , res){
+  async dataDeleteUploads(req, res) {
     try {
       const { id } = req.params;
       const result = await serviceDatas.serviceDataDelete(id);
       return res.status(200).json({
         statusCode: "SUCESSO_DELETADO",
-        result,
+        data: result,
       });
-    } catch (e) {
-      const statusCode = "ERRO_AO_DELETAR";
+    } catch (error) {
       return res.status(500).json({
-        statusCode,
-        error: e.message,
+        statusCode: "ERRO_AO_DELETAR",
+        error: error.message,
       });
     }
   }
-
 }
+
 module.exports = new ControllerData();
