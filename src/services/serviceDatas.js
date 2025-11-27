@@ -31,7 +31,7 @@ class serviceDatas {
       const [result] = await mysqlCon_LOCAL.execute(sql);
       return result;
     } catch (error) {
-      throw new Error(`${STATUS.ERRO_BUSCA_DADOS}: Falha ao buscar dados`);
+      throw new Error(`${STATUS.ERRO_BUSCA_DADOS}`);
     }
   }
 
