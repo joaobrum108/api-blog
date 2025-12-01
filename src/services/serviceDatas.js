@@ -106,34 +106,27 @@ class serviceDatas {
 
 
   async serviceDeletarDadosPorID(id) {
-    try {
-      const [rows] = await mysqlCon_LOCAL.execute("SELECT imagem FROM posts WHERE id = ?", [id]);
-      if (rows.length === 0) {
-        throw new Error(`${STATUS.POST_NAO_ENCONTRADO}: Post não encontrado`);
-      }
-
-      const nomeImagem = rows[0].imagem;
-
-      if (nomeImagem) {
-        const pathDelete = path.resolve(__dirname, "..", "..", "uploads", nomeImagem);
-        if (fs.existsSync(pathDelete)) {
-          await fs.promises.unlink(pathDelete);
-        }
-      }
-
-      const [result] = await mysqlCon_LOCAL.execute("DELETE FROM posts WHERE id = ?", [id]);
-      if (result.affectedRows === 0) {
-        throw new Error(`${STATUS.ERRO_DELETAR_REGISTRO}: Nenhum registro foi deletado`);
-      }
-
-      return { message: "Post deletado com sucesso!" };
-    } catch (error) {
-      return {
-        statusCode: STATUS.ERRO_DELETAR_REGISTRO,
-        error: error.message,
-      };
+  try {
+    const [rows] = await mysqlCon_LOCAL.execute("SELECT id FROM posts WHERE id = ?", [id]);
+    if (rows.length === 0) {
+      throw new Error(`${STATUS.POST_NAO_ENCONTRADO}: Post não encontrado`);
     }
+
+
+    const [result] = await mysqlCon_LOCAL.execute("DELETE FROM posts WHERE id = ?", [id]);
+    if (result.affectedRows === 0) {
+      throw new Error(`${STATUS.ERRO_DELETAR_REGISTRO}: Nenhum registro foi deletado`);
+    }
+
+    return { message: "Post deletado com sucesso!" };
+  } catch (error) {
+    return {
+      statusCode: STATUS.ERRO_DELETAR_REGISTRO,
+      error: error.message,
+    };
   }
+}
+
 }
 
 module.exports = new serviceDatas();
