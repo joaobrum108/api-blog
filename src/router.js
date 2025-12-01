@@ -7,14 +7,14 @@ const upload = require('./middleware/multer');
  * @openapi
  * /enviarDados:
  *   post:
- *     summary: Envia um novo post com imagem
- *     description: Cria um novo post no banco de dados, incluindo título, descrição, categoria e imagem.
+ *     summary: Envia um novo post
+ *     description: Cria um novo post no banco de dados, incluindo título, descrição, categoria, tempo de leitura, data de publicação e autor.
  *     tags:
- *       - Uploads
+ *       - Posts
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
@@ -23,43 +23,53 @@ const upload = require('./middleware/multer');
  *                 example: "Novo Post"
  *               descricao:
  *                 type: string
- *                 example: "Descrição do post"
+ *                 example: "Descrição detalhada do post"
  *               categoria:
  *                 type: string
  *                 example: "Tecnologia"
- *               imagem:
+ *               tempoLeitura:
  *                 type: string
- *                 format: binary
+ *                 example: "5 min de leitura"
+ *               dataPublicacao:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-11-28"
+ *               autor:
+ *                 type: string
+ *                 example: "Equipe de RH"
  *     responses:
  *       200:
- *         description: Imagem salva com sucesso.
+ *         description: Post criado com sucesso.
  *         content:
  *           application/json:
  *             example:
- *               statusCode: IMAGEM_SALVA
+ *               statusCode: DADOS_SALVOS
  *               message: Dados enviados com sucesso!
  *               data:
+ *                 id: 1
  *                 titulo: "Novo Post"
- *                 descricao: "Descrição do post"
+ *                 descricao: "Descrição detalhada do post"
  *                 categoria: "Tecnologia"
- *                 imagem: "imagem.jpg"
- *       400:
- *         description: Nenhuma imagem enviada.
+ *                 tempoLeitura: "5 min de leitura"
+ *                 dataPublicacao: "2025-11-28"
+ *                 autor: "Equipe de RH"
+ *       404:
+ *         description: Post não encontrado.
  *         content:
  *           application/json:
  *             example:
- *               statusCode: NENHUMA_IMAGEM_ENVIADA
- *               error: Envie uma imagem válida.
+ *               statusCode: POST_NAO_ENCONTRADO
+ *               error: "Post não encontrado"
  *       500:
- *         description: Erro interno ao salvar imagem.
+ *         description: Erro interno ao salvar post.
  *         content:
  *           application/json:
  *             example:
  *               statusCode: ERRO_INSERIR_DADOS
- *               error: Falha ao enviar dados.
+ *               error: "Falha ao enviar dados."
  */
 
-router.post('/enviarDados', upload.single('imagem'), controllerDados.enviarDados);
+router.post('/enviarDados', controllerDados.enviarDados);
 
 /**
  * @openapi

@@ -20,8 +20,9 @@ app.use('/uploads', express.static('uploads'));
 const PORT = process.env.PORT || 3000;
 app.use('/api', router)
 
+
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`)
+  console.log(`Servidor rodando em http://localhost:${PORT}`)
 })
 
 module.exports = app

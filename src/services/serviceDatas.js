@@ -4,26 +4,39 @@ const path = require("path");
 const STATUS = require("../utils/statusCodes");
 
 class serviceDatas {
-  async serviceEnviarDados(titulo, descricao, categoria, file) {
-    try {
-      const sql = "INSERT INTO posts (titulo, descricao, categoria, imagem , dataPublicacao) VALUES (?, ?, ?, ? , NOW())";
-      const [result] = await mysqlCon_LOCAL.execute(sql, [
-        titulo,
-        descricao,
-        categoria,
-        file.filename,
-      ]);
-      return {
-        message: "Dados enviados com sucesso!",
-        titulo,
-        descricao,
-        categoria,
-        imagem: file ? file.filename : null,
-      };
-    } catch (error) {
-      throw new Error(`${STATUS.ERRO_INSERIR_DADOS}: Falha ao enviar dados`);
-    }
+  async serviceEnviarDados({ titulo, descricao, categoria, tempoLeitura, dataPublicacao, autor }) {
+  try {
+    const sql = `
+      INSERT INTO posts 
+        (titulo, descricao, categoria, tempoLeitura, dataPublicacao, autor) 
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    const [result] = await mysqlCon_LOCAL.execute(sql, [
+      titulo,
+      descricao,
+      categoria,
+      tempoLeitura,
+      dataPublicacao,
+      autor
+    ]);
+
+    return {
+      message: "Dados enviados com sucesso!",
+      id: result.insertId,
+      titulo,
+      descricao,
+      categoria,
+      tempoLeitura,
+      dataPublicacao,
+      autor
+    };
+  } catch (error) {
+    throw new Error(`${STATUS.ERRO_INSERIR_DADOS}: Falha ao enviar dados`);
   }
+}
+
+
 
   async serviceListarDados() {
     try {
@@ -45,49 +58,52 @@ class serviceDatas {
     }
   }
 
-  async serviceAtualizarDados(id, titulo, descricao, categoria, novaImagem) {
-    try {
-      const [rows] = await mysqlCon_LOCAL.execute("SELECT imagem FROM posts WHERE id = ?", [id]); 
+  async serviceAtualizarDados(id, titulo, descricao, categoria, tempoLeitura, dataPublicacao, autor) {
+  try {
+
+    const [rows] = await mysqlCon_LOCAL.execute("SELECT id FROM posts WHERE id = ?", [id]); 
     
-      if (rows.length === 0) {
-        throw new Error(`${STATUS.POST_NAO_ENCONTRADO}: Post não encontrado`);
-      }
-
-      const imagemAntiga = rows[0].imagem;
-
-      if (novaImagem && novaImagem !== imagemAntiga) {
-        if (imagemAntiga) {
-          const caminhoAntigo = path.resolve(__dirname, "..", "..", "uploads", imagemAntiga);
-          if (fs.existsSync(caminhoAntigo)) {
-            await fs.promises.unlink(caminhoAntigo);
-          }
-        } else {
-          const uploadsPath = path.resolve(__dirname, "..", "..", "uploads");
-          if (fs.existsSync(uploadsPath)) {
-            const files = await fs.promises.readdir(uploadsPath);
-            const possivelImagemAntiga = files.find(file => 
-              file.includes(id.toString()) || 
-              file.startsWith('post_') ||
-              file === novaImagem 
-            );
-            if (possivelImagemAntiga) {
-              const caminhoPossivel = path.resolve(uploadsPath, possivelImagemAntiga);
-              if (fs.existsSync(caminhoPossivel)) {
-                await fs.promises.unlink(caminhoPossivel);
-              }
-            }
-          }
-        }
-      }
-
-      const sql = "UPDATE posts SET titulo = ?, descricao = ?, categoria = ?, imagem = ? WHERE id = ?";
-      const [result] = await mysqlCon_LOCAL.execute(sql, [titulo, descricao, categoria, novaImagem, id]);
-      
-      return result;
-    } catch (error) {
-      throw new Error(`${STATUS.ERRO_ATUALIZACAO}: Falha ao atualizar dados - ${error.message}`);
+    if (rows.length === 0) {
+      throw new Error(`${STATUS.POST_NAO_ENCONTRADO}: Post não encontrado`);
     }
+
+    const sql = `
+      UPDATE posts 
+      SET titulo = ?, 
+          descricao = ?, 
+          categoria = ?, 
+          tempoLeitura = ?, 
+          dataPublicacao = ?, 
+          autor = ?
+      WHERE id = ?
+    `;
+
+    const [result] = await mysqlCon_LOCAL.execute(sql, [
+      titulo,
+      descricao,
+      categoria,
+      tempoLeitura,
+      dataPublicacao,
+      autor,
+      id
+    ]);
+    
+    return {
+      message: "Post atualizado com sucesso!",
+      affectedRows: result.affectedRows,
+      id,
+      titulo,
+      descricao,
+      categoria,
+      tempoLeitura,
+      dataPublicacao,
+      autor
+    };
+  } catch (error) {
+    throw new Error(`${STATUS.ERRO_ATUALIZACAO}: Falha ao atualizar dados - ${error.message}`);
   }
+}
+
 
   async serviceDeletarDadosPorID(id) {
     try {

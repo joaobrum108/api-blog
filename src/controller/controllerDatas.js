@@ -3,32 +3,40 @@ const STATUS = require("../utils/statusCodes");
 
 class controllerDados {
   async enviarDados(req, res) {
-    try {
-      const { titulo, descricao, categoria } = req.body;
-      const file = req.file;
+  try {
+    const { 
+      titulo, 
+      descricao, 
+      categoria, 
+      tempoLeitura, 
+      dataPublicacao, 
+      autor 
+    } = req.body;
 
-      if (!file) {
-        return res.status(400).json({
-          statusCode: "NENHUMA_IMAGEM_ENVIADA",
-          error: "Envie uma imagem válida.",
-        });
-      }
+    const result = await serviceDatas.serviceEnviarDados({
+      titulo,
+      descricao,
+      categoria,
+      tempoLeitura,
+      dataPublicacao,
+      autor
+    });
 
-      const result = await serviceDatas.serviceEnviarDados(titulo, descricao, categoria, file);
-
-      return res.status(200).json({
-        statusCode: "IMAGEM_SALVA",
-        message: result.message,
-        data: result,
-      });
-    } catch (error) {
-      const [statusCode, message] = error.message.split(":");
-      return res.status(500).json({
-        statusCode: statusCode || STATUS.ERRO_INSERIR_DADOS,
-        error: message?.trim() || "Erro interno ao enviar dados.",
-      });
-    }
+    return res.status(200).json({
+      statusCode: "DADOS_SALVOS",
+      message: result.message,
+      data: result,
+    });
+  } catch (error) {
+    const [statusCode, message] = error.message.split(":");
+    return res.status(500).json({
+      statusCode: statusCode || STATUS.ERRO_INSERIR_DADOS,
+      error: message?.trim() || "Erro interno ao enviar dados.",
+    });
   }
+}
+
+
 
   async listarDados(req, res) {
     try {
