@@ -208,7 +208,7 @@ router.get('/buscarDados/:id', controllerDados.buscarDadosPorID);
  *               error: Falha ao atualizar dados.
  */
 
-router.put('/atualizarDados/:id', upload.single('imagem'), controllerDados.atualizarDadosPorID);
+router.put('/atualizarDados/:id',  controllerDados.atualizarDadosPorID);
 
 /**
  * @openapi

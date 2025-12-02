@@ -73,26 +73,41 @@ class controllerDados {
   }
 
   async atualizarDadosPorID(req, res) {
-    try {
-      const { id } = req.params;
-      const { titulo, descricao, categoria } = req.body;
-      const novaImagem = req.file ? req.file.filename : null;
+  try {
+    const { id } = req.params;
+    const { 
+      titulo, 
+      descricao, 
+      categoria, 
+      tempoLeitura, 
+      dataPublicacao, 
+      autor 
+    } = req.body;
 
-      const result = await serviceDatas.serviceAtualizarDados(id, titulo, descricao, categoria, novaImagem);
+    const result = await serviceDatas.serviceAtualizarDados(
+      id, 
+      titulo, 
+      descricao, 
+      categoria, 
+      tempoLeitura, 
+      dataPublicacao, 
+      autor
+    );
 
-      return res.status(200).json({
-        statusCode: "SUCESSO_ATUALIZADO",
-        data: result,
-      });
-    } catch (error) {
-      const [statusCode, message] = error.message.split(":");
-      const httpCode = statusCode === STATUS.POST_NAO_ENCONTRADO ? 404 : 500;
-      return res.status(httpCode).json({
-        statusCode: statusCode || STATUS.ERRO_ATUALIZACAO,
-        error: message?.trim() || "Erro ao atualizar dados.",
-      });
-    }
+    return res.status(200).json({
+      statusCode: "SUCESSO_ATUALIZADO",
+      data: result,
+    });
+  } catch (error) {
+    const [statusCode, message] = error.message.split(":");
+    const httpCode = statusCode === STATUS.POST_NAO_ENCONTRADO ? 404 : 500;
+    return res.status(httpCode).json({
+      statusCode: statusCode || STATUS.ERRO_ATUALIZACAO,
+      error: message?.trim() || "Erro ao atualizar dados.",
+    });
   }
+}
+
 
   async deletarDadosPorID(req, res) {
     try {
