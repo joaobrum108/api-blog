@@ -72,7 +72,7 @@ class controllerDados {
     }
   }
 
-  async atualizarDadosPorID(req, res) {
+async atualizarDadosPorID(req, res) {
   try {
     const { id } = req.params;
     const { 
@@ -80,7 +80,6 @@ class controllerDados {
       descricao, 
       categoria, 
       tempoLeitura, 
-      dataPublicacao, 
       autor 
     } = req.body;
 
@@ -90,7 +89,6 @@ class controllerDados {
       descricao, 
       categoria, 
       tempoLeitura, 
-      dataPublicacao, 
       autor
     );
 
@@ -107,6 +105,7 @@ class controllerDados {
     });
   }
 }
+
 
 
   async deletarDadosPorID(req, res) {

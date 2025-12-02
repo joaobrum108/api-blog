@@ -4,12 +4,12 @@ const path = require("path");
 const STATUS = require("../utils/statusCodes");
 
 class serviceDatas {
-  async serviceEnviarDados({ titulo, descricao, categoria, tempoLeitura, dataPublicacao, autor }) {
+  async serviceEnviarDados({ titulo, descricao, categoria, tempoLeitura, autor }) {
   try {
     const sql = `
       INSERT INTO posts 
-        (titulo, descricao, categoria, tempoLeitura, dataPublicacao, autor) 
-      VALUES (?, ?, ?, ?, ?, ?)
+        (titulo, descricao, categoria, tempoLeitura, autor) 
+      VALUES (?, ?, ?, ?, ?)
     `;
 
     const [result] = await mysqlCon_LOCAL.execute(sql, [
@@ -17,7 +17,6 @@ class serviceDatas {
       descricao,
       categoria,
       tempoLeitura,
-      dataPublicacao,
       autor
     ]);
 
@@ -28,7 +27,6 @@ class serviceDatas {
       descricao,
       categoria,
       tempoLeitura,
-      dataPublicacao,
       autor
     };
   } catch (error) {
@@ -38,42 +36,66 @@ class serviceDatas {
 
 
 
-  async serviceListarDados() {
-    try {
-      const sql = "SELECT * FROM posts";
-      const [result] = await mysqlCon_LOCAL.execute(sql);
-      return result;
-    } catch (error) {
-      throw new Error(`${STATUS.ERRO_BUSCA_DADOS}`);
-    }
+
+ async serviceListarDados() {
+  try {
+    const sql = `
+      SELECT 
+        id,
+        titulo,
+        descricao,
+        categoria,
+        tempoLeitura,
+        autor,
+        created_at AS dataPublicacao
+      FROM posts
+    `;
+    const [result] = await mysqlCon_LOCAL.execute(sql);
+    return result;
+  } catch (error) {
+    throw new Error(`${STATUS.ERRO_BUSCA_DADOS}`);
   }
+}
+
 
   async serviceListarDadosPorID(id) {
-    try {
-      const sql = "SELECT * FROM posts WHERE id = ?";
-      const [result] = await mysqlCon_LOCAL.execute(sql, [id]);
-      return result;
-    } catch (error) {
-      throw new Error(`${STATUS.ERRO_BUSCA_POR_ID}: Falha ao buscar dados por ID`);
-    }
-  }
-
-  async serviceAtualizarDados(id, titulo, descricao, categoria, tempoLeitura, dataPublicacao, autor) {
   try {
+    const sql = `
+      SELECT 
+        id,
+        titulo,
+        descricao,
+        categoria,
+        tempoLeitura,
+        autor,
+        created_at AS dataPublicacao
+      FROM posts
+      WHERE id = ?
+    `;
+    const [result] = await mysqlCon_LOCAL.execute(sql, [id]);
+    return result;
+  } catch (error) {
+    throw new Error(`${STATUS.ERRO_BUSCA_POR_ID}: Falha ao buscar dados por ID`);
+  }
+}
 
+
+  async serviceAtualizarDados(id, titulo, descricao, categoria, tempoLeitura, autor) {
+  try {
+    // Verifica se o post existe
     const [rows] = await mysqlCon_LOCAL.execute("SELECT id FROM posts WHERE id = ?", [id]); 
     
     if (rows.length === 0) {
       throw new Error(`${STATUS.POST_NAO_ENCONTRADO}: Post não encontrado`);
     }
 
+    // Atualiza apenas os campos relevantes
     const sql = `
       UPDATE posts 
       SET titulo = ?, 
           descricao = ?, 
           categoria = ?, 
           tempoLeitura = ?, 
-          dataPublicacao = ?, 
           autor = ?
       WHERE id = ?
     `;
@@ -83,7 +105,6 @@ class serviceDatas {
       descricao,
       categoria,
       tempoLeitura,
-      dataPublicacao,
       autor,
       id
     ]);
@@ -96,7 +117,6 @@ class serviceDatas {
       descricao,
       categoria,
       tempoLeitura,
-      dataPublicacao,
       autor
     };
   } catch (error) {
@@ -105,13 +125,14 @@ class serviceDatas {
 }
 
 
+
   async serviceDeletarDadosPorID(id) {
   try {
+
     const [rows] = await mysqlCon_LOCAL.execute("SELECT id FROM posts WHERE id = ?", [id]);
     if (rows.length === 0) {
       throw new Error(`${STATUS.POST_NAO_ENCONTRADO}: Post não encontrado`);
     }
-
 
     const [result] = await mysqlCon_LOCAL.execute("DELETE FROM posts WHERE id = ?", [id]);
     if (result.affectedRows === 0) {
@@ -126,6 +147,7 @@ class serviceDatas {
     };
   }
 }
+
 
 }
 
