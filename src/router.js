@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controllerDados = require('./controller/controllerDatas');
-const upload = require('./middleware/multer');
+
 
 /**
  * @openapi
@@ -101,7 +101,7 @@ router.post('/enviarDados', controllerDados.enviarDados);
  *               error: Falha ao buscar dados.
  */
 
-router.get('/listarDados', upload.single('imagem'), controllerDados.listarDados);
+router.get('/listarDados',  controllerDados.listarDados);
 
 /**
  * @openapi
