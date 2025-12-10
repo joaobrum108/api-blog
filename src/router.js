@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const controllerDados = require('./controller/controllerDatas');
-
+const uploadPlanilhas = require('./middlewares/multer');
+const controllerPlanilhas = require('./controller/controllerPlanilhas');
 
 /**
  * @openapi
@@ -251,5 +252,11 @@ router.put('/atualizarDados/:id',  controllerDados.atualizarDadosPorID);
  */
 
 router.delete('/deletarDados/:id', controllerDados.deletarDadosPorID);
+
+
+
+router.post("/upload", uploadPlanilhas.single("planilha"), controllerPlanilhas.uploadPlanilha);
+
+
 
 module.exports = router;
