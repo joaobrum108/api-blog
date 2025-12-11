@@ -9,6 +9,8 @@ class PlanilhasController {
             }
             const result = await servicePlanilhas.uploadPlanilha(arquivo);
             return res.json({
+                status: 200,
+                statusCode: "SUCESSO",
                 mensagem: "Planilha enviada com sucesso",
                 dados: result
             });

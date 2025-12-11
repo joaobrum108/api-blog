@@ -18,6 +18,7 @@
     "fs-extra": "^11.3.2",
     "multer": "^2.0.2",
     "mysql2": "^3.15.1",
-    "swagger-jsdoc": "^6.2.8"
+    "swagger-jsdoc": "^6.2.8",
+    "xlsx": "^0.18.5"
   }
 }

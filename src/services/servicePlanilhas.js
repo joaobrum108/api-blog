@@ -1,8 +1,8 @@
-const XLS = require("xlsjs");
+// const XLS = require("xlsjs");
 
 class ServicePlanilhas {
     async uploadPlanilha(arquivo) {
-       
+       console.log(arquivo);
     }
 }
 
