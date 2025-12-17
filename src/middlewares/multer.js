@@ -10,13 +10,21 @@ if(!fs.existsSync(pastaPlanilhas)){
 }
 
 const storage = multer.diskStorage({
-    destination: (req , file , cb) =>{
-        cb(null , pastaPlanilhas)
-    },
-    filename: (req , file , cb) => {
-        cb(null , file.originalname)
-    }
-})
+  destination: (req, file, cb) => {
+    cb(null, pastaPlanilhas);
+  },
+  filename: (req, file, cb) => {
+
+    const nomeSeguro = file.originalname
+      .normalize("NFD")              
+      .replace(/[\u0300-\u036f]/g, "") 
+      .replace(/\s+/g, "_")          
+      .toLowerCase();                 
+
+    cb(null, nomeSeguro);
+  }
+});
+
 
 const uploadPlanilhas = multer({storage})
 
