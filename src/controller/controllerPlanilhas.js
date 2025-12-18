@@ -13,13 +13,13 @@ class PlanilhasController {
         });
       }
       
-      const result = await excelReader.lerArquivo(arquivo.path);
+      const result = await excelReader.lerArquivo(arquivo);
 
       return res.status(200).json({
         status: 200,
         statusCode: "SUCESSO",
         mensagem: "Planilha enviada com sucesso",
-        dados: result
+        data: result
       });
 
     } catch (erro) {

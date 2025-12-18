@@ -5,7 +5,7 @@ class ServicePlanilhas {
     async processarPlanilha(arquivo) { 
         try {
 
-            const dados = ExcelReader.lerArquivo(arquivo.path);
+            const dados = await ExcelReader.lerArquivo(arquivo.path);
             
             this.validarDados(dados);
             
