@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const controllerDados = require('./controller/controllerDatas');
-const uploadPlanilhas = require('./middlewares/multer');
-const controllerPlanilhas = require('./controller/controllerPlanilhas');
+const controllerAniversariante = require('./controller/controllerAniversariante');
+
 
 /**
  * @openapi
@@ -253,6 +253,11 @@ router.put('/atualizarDados/:id',  controllerDados.atualizarDadosPorID);
 
 router.delete('/deletarDados/:id', controllerDados.deletarDadosPorID);
 
-router.post("/upload", uploadPlanilhas.single("planilha"), controllerPlanilhas.uploadPlanilha);
+
+
+router.post('/aniversariante' , controllerAniversariante.enviarAniversariante);
+
+router.get('/listarAniversariante', controllerAniversariante.listarAniversariante);
+
 
 module.exports = router;
