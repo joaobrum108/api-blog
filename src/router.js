@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const controllerDados = require('./controller/controllerDatas');
 const controllerAniversariante = require('./controller/controllerAniversariante');
-
+const authMiddleware = require('./middlewares/authMiddleware')
 
 /**
  * @openapi
@@ -70,7 +70,7 @@ const controllerAniversariante = require('./controller/controllerAniversariante'
  *               error: "Falha ao enviar dados."
  */
 
-router.post('/enviarDados', controllerDados.enviarDados);
+router.post('/enviarDados', authMiddleware, controllerDados.enviarDados);
 
 /**
  * @openapi
@@ -102,7 +102,7 @@ router.post('/enviarDados', controllerDados.enviarDados);
  *               error: Falha ao buscar dados.
  */
 
-router.get('/listarDados',  controllerDados.listarDados);
+router.get('/listarDados', authMiddleware,  controllerDados.listarDados);
 
 /**
  * @openapi
@@ -148,7 +148,7 @@ router.get('/listarDados',  controllerDados.listarDados);
  *               error: Falha ao buscar dados por ID.
  */
 
-router.get('/buscarDados/:id', controllerDados.buscarDadosPorID);
+router.get('/buscarDados/:id',authMiddleware, controllerDados.buscarDadosPorID);
 
 /**
  * @openapi
@@ -209,7 +209,7 @@ router.get('/buscarDados/:id', controllerDados.buscarDadosPorID);
  *               error: Falha ao atualizar dados.
  */
 
-router.put('/atualizarDados/:id',  controllerDados.atualizarDadosPorID);
+router.put('/atualizarDados/:id',authMiddleware,  controllerDados.atualizarDadosPorID);
 
 /**
  * @openapi
@@ -251,13 +251,14 @@ router.put('/atualizarDados/:id',  controllerDados.atualizarDadosPorID);
  *               error: Falha ao deletar registro.
  */
 
-router.delete('/deletarDados/:id', controllerDados.deletarDadosPorID);
+router.delete('/deletarDados/:id',authMiddleware, controllerDados.deletarDadosPorID);
 
+router.post('/aniversariante' , authMiddleware , controllerAniversariante.enviarAniversariante);
 
+router.get('/listarAniversariante',authMiddleware, controllerAniversariante.listarAniversariante);
 
-router.post('/aniversariante' , controllerAniversariante.enviarAniversariante);
+router.put('/atualizarAniversariante/:id',authMiddleware, controllerAniversariante.atualizarAniversariante);
 
-router.get('/listarAniversariante', controllerAniversariante.listarAniversariante);
-
+router.delete('/deletarAniversariante/:id',authMiddleware, controllerAniversariante.deletarAniversariante);
 
 module.exports = router;

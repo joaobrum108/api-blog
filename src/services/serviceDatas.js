@@ -127,25 +127,21 @@ class serviceDatas {
 
 
   async serviceDeletarDadosPorID(id) {
-  try {
-
     const [rows] = await mysqlCon_LOCAL.execute("SELECT id FROM posts WHERE id = ?", [id]);
     if (rows.length === 0) {
-      throw new Error(`${STATUS.POST_NAO_ENCONTRADO}: Post não encontrado`);
+      const err = new Error(`${STATUS.POST_NAO_ENCONTRADO}: Post não encontrado`);
+      err.statusCode = STATUS.POST_NAO_ENCONTRADO;
+      throw err;
     }
 
     const [result] = await mysqlCon_LOCAL.execute("DELETE FROM posts WHERE id = ?", [id]);
     if (result.affectedRows === 0) {
-      throw new Error(`${STATUS.ERRO_DELETAR_REGISTRO}: Nenhum registro foi deletado`);
+      const err = new Error(`${STATUS.ERRO_DELETAR_REGISTRO}: Nenhum registro foi deletado`);
+      err.statusCode = STATUS.ERRO_DELETAR_REGISTRO;
+      throw err;
     }
 
     return { message: "Post deletado com sucesso!" };
-  } catch (error) {
-    return {
-      statusCode: STATUS.ERRO_DELETAR_REGISTRO,
-      error: error.message,
-    };
-  }
 }
 
 
