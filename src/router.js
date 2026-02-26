@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const controllerDados = require('./controller/controllerDatas');
 const controllerAniversariante = require('./controller/controllerAniversariante');
-const authMiddleware = require('./middlewares/authMiddleware')
+const authMiddleware = require('./middlewares/authMiddleware');
 
 /**
  * @openapi
@@ -253,12 +253,16 @@ router.put('/atualizarDados/:id',authMiddleware,  controllerDados.atualizarDados
 
 router.delete('/deletarDados/:id',authMiddleware, controllerDados.deletarDadosPorID);
 
-router.post('/aniversariante' , authMiddleware , controllerAniversariante.enviarAniversariante);
+router.post('/aniversariante/importar',  authMiddleware, controllerAniversariante.importarExcel);
+router.get('/aniversariante/config',     authMiddleware, controllerAniversariante.obterConfig);
+router.delete('/aniversariante/limpar',  authMiddleware, controllerAniversariante.limparTodos);
 
-router.get('/listarAniversariante',authMiddleware, controllerAniversariante.listarAniversariante);
+router.post('/aniversariante', authMiddleware, controllerAniversariante.enviarAniversariante);
 
-router.put('/atualizarAniversariante/:id',authMiddleware, controllerAniversariante.atualizarAniversariante);
+router.get('/listarAniversariante', authMiddleware, controllerAniversariante.listarAniversariante);
 
-router.delete('/deletarAniversariante/:id',authMiddleware, controllerAniversariante.deletarAniversariante);
+router.put('/atualizarAniversariante/:id', authMiddleware, controllerAniversariante.atualizarAniversariante);
+
+router.delete('/deletarAniversariante/:id', authMiddleware, controllerAniversariante.deletarAniversariante);
 
 module.exports = router;
